@@ -6,5 +6,4 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(parking_patrol main.cpp
         quick_sort.cpp
         quick_sort.h
-        ticket.cpp
         ticket.h)
