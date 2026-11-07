@@ -4,7 +4,7 @@
 
 #include "quick_sort.h"
 
-void quick_sort(span<int> sub) {
+void quick_sort(span<ticket> sub, TicketData data) {
     if (sub.size() <= 1) {
         return;
     }
@@ -14,11 +14,11 @@ void quick_sort(span<int> sub) {
     int right_pointer = sub.size() - 1;
 
     while (left_pointer <= right_pointer) {
-        while (sub[right_pointer] > sub[pivot_pointer]) {
+        while (sub[right_pointer].get_data_field(data) > sub[pivot_pointer].get_data_field(data)) {
             right_pointer--;
         }
 
-        while (sub[left_pointer] <= sub[pivot_pointer] && left_pointer <= right_pointer) {
+        while (sub[left_pointer].get_data_field(data) <= sub[pivot_pointer].get_data_field(data) && left_pointer <= right_pointer) {
             left_pointer++;
         }
 
@@ -29,17 +29,17 @@ void quick_sort(span<int> sub) {
 
     swap(sub[pivot_pointer], sub[right_pointer]);
 
-    span<int> subarr_left(sub.begin(), right_pointer);
-    span<int> subarr_right(sub.begin() + right_pointer + 1, sub.size() - right_pointer - 1);
+    span<ticket> subarr_left(sub.begin(), right_pointer);
+    span<ticket> subarr_right(sub.begin() + right_pointer + 1, sub.size() - right_pointer - 1);
 
-    quick_sort(subarr_left);
-    quick_sort(subarr_right);
+    quick_sort(subarr_left, data);
+    quick_sort(subarr_right, data);
 }
 
-vector<int> do_quick_sort(vector<int> arr) {
-    span<int> subarr(arr.begin(), arr.size());
+vector<ticket> do_quick_sort(vector<ticket> arr, TicketData data) {
+    span<ticket> subarr(arr.begin(), arr.size());
 
-    quick_sort(subarr);
+    quick_sort(subarr, data);
 
     return arr;
 }

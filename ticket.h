@@ -8,6 +8,10 @@ using namespace std;
 #ifndef PARKING_PATROL_TICKET_H
 #define PARKING_PATROL_TICKET_H
 
+enum class TicketData {
+    Plate_Number, State, Vehicle_Make, Vehicle_Style, Vehicle_Color, Location, Violation,
+    Fine, Year, Month, Day, Hour, Minute
+};
 
 struct ticket {
     string plate_number;
@@ -23,6 +27,25 @@ struct ticket {
     int day;
     int hour;
     int minute;
+
+    /* Returns the data in the struct member specified by TicketData */
+    variant<string, int, double> get_data_field(TicketData data) {
+        switch (data) {
+            case TicketData::Plate_Number: return plate_number;
+            case TicketData::State: return state;
+            case TicketData::Vehicle_Make: return vehicle_make;
+            case TicketData::Vehicle_Style: return vehicle_style;
+            case TicketData::Vehicle_Color: return vehicle_color;
+            case TicketData::Location: return location;
+            case TicketData::Violation: return violation;
+            case TicketData::Fine: return fine;
+            case TicketData::Year: return year;
+            case TicketData::Month: return month;
+            case TicketData::Day: return day;
+            case TicketData::Hour: return hour;
+            case TicketData::Minute: return minute;
+        }
+    }
 };
 
 
