@@ -10,10 +10,7 @@ using namespace std;
 #ifndef PARKING_PATROL_QUICK_SORT_H
 #define PARKING_PATROL_QUICK_SORT_H
 
-/* Takes a vector of ticket structs and converts it to a span for quick sort. */
+/* Takes a vector of ticket structs and converts it as a sorted vector using quick sort. */
 vector<int> do_quick_sort(vector<int> arr);
-
-/* Quick sort logic. */
-void quick_sort(span<int> sub);
 
 #endif //PARKING_PATROL_QUICK_SORT_H

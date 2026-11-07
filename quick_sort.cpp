@@ -4,14 +4,6 @@
 
 #include "quick_sort.h"
 
-vector<int> do_quick_sort(vector<int> arr) {
-    span<int> subarr(arr.begin(), arr.size());
-
-    quick_sort(subarr);
-
-    return arr;
-}
-
 void quick_sort(span<int> sub) {
     if (sub.size() <= 1) {
         return;
@@ -42,4 +34,12 @@ void quick_sort(span<int> sub) {
 
     quick_sort(subarr_left);
     quick_sort(subarr_right);
+}
+
+vector<int> do_quick_sort(vector<int> arr) {
+    span<int> subarr(arr.begin(), arr.size());
+
+    quick_sort(subarr);
+
+    return arr;
 }
