@@ -35,7 +35,7 @@ void display_tickets(const vector<ticket>& tickets, int limit = 15) {
              << setw(12) << t.plate_number
              << setw(8)  << t.state
              << setw(15) << t.vehicle_make
-             << setw(35) << t.violation.substr(0, 33) // Truncate super long violations
+             << setw(35) << t.violation.substr(0, 33) 
              << setw(10) << t.fine
              << setw(15) << t.vehicle_color
              << setw(10) << t.year
@@ -69,6 +69,11 @@ void display_top_ten(const vector<ticket>& tickets, TicketData data) {
 
 int main() {
     vector<ticket> tickets = load_csv("../parking_citations_expanded.csv");
+
+    if (tickets.empty()) {
+            cerr << "No tickets loaded. Exiting." << endl;
+        return 1;
+    }
 
     // vector<ticket> few(tickets.begin(), tickets.begin() + 20000);
     //
