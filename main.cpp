@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <unordered_map>
 #include <string>
 #include "ticket.h"
 #include "csv_loader.h"
@@ -45,16 +46,35 @@ void display_tickets(const vector<ticket>& tickets, int limit = 15) {
     cout << endl;
 }
     
+void display_top_ten(const vector<ticket>& tickets, TicketData data) {
+    unordered_map<variant<string, int, double>, int> tracker;
 
+    for (const auto& t : tickets) {
+        tracker[t.get_data_field(data)]++;
+    }
 
-// TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+    vector<pair<variant<string, int, double>, int>> results(tracker.begin(), tracker.end());
+    sort(results.begin(), results.end(), [](auto a, auto b) {
+        return a.second > b.second;
+    });
+
+    cout << "\nShowing top 10 offender results:\n";
+    cout << string(40, '-') << endl;
+    for (int i = 0; i < 10 && i < results.size(); i++) {
+        visit([](auto &arg) { cout << left << setw(35) << arg; }, results[i].first);
+        cout << right << setw(5) << results[i].second << endl;
+    }
+}
+
 
 int main() {
     vector<ticket> tickets = load_csv("../parking_citations_expanded.csv");
 
-    vector<ticket> few(tickets.begin(), tickets.begin() + 20000);
+    // vector<ticket> few(tickets.begin(), tickets.begin() + 20000);
+    //
+    // vector<ticket> sorted = do_quick_sort(few, TicketData::Month);
+    //
+    // display_tickets(sorted);
 
-    vector<ticket> sorted = do_quick_sort(few, TicketData::Month);
-
-    display_tickets(sorted);
+    display_top_ten(tickets, TicketData::Plate_Number);
 }

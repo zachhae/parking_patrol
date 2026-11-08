@@ -30,7 +30,7 @@ struct ticket {
     int minute;
 
     /* Returns the data in the struct member specified by TicketData */
-    variant<string, int, double> get_data_field(TicketData data) {
+    variant<string, int, double> get_data_field(TicketData data) const {
         switch (data) {
             case TicketData::Plate_Number: return plate_number;
             case TicketData::State: return state;
