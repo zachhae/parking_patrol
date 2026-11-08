@@ -42,17 +42,23 @@ void display_tickets(const vector<ticket>& tickets, int limit = 15) {
 
 // TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
-int main() {
-    // TIP Press <shortcut actionId="RenameElement"/> when your caret is at the <b>lang</b> variable name to see how CLion can help you rename it.
 
-    const auto lang = "C++";
-    std::cout << "Hello and welcome to " << lang << "!\n";
-
-    for (int i = 1; i <= 5; i++) {
-        // TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        std::cout << "i = " << i << std::endl;
+    int main() {
+    cout << "Loading parking data...\n";
+    
+    // Load the CSV using your inline function
+    vector<ticket> tickets = load_csv("parking_citations_expanded.csv"); 
+    
+    if (tickets.empty()) {
+        cout << "Failed to load data. Check the file name and path.\n";
+        return 1;
     }
+    
+    cout << "Successfully loaded " << tickets.size() << " tickets.\n";
+
+    // Test the display function directly
+    display_tickets(tickets);
 
     return 0;
-    // TIP See CLion help at <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>. Also, you can try interactive lessons for CLion by selecting 'Help | Learn IDE Features' from the main menu.
 }
+
