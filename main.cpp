@@ -4,6 +4,7 @@
 #include <string>
 #include "ticket.h"
 #include "csv_loader.h"
+#include "quick_sort.h"
 
 using namespace std;
 
@@ -16,10 +17,13 @@ void display_tickets(const vector<ticket>& tickets, int limit = 15) {
          << setw(8)  << "State" 
          << setw(15) << "Make" 
          << setw(35) << "Violation" 
-         << setw(10) << "Fine ($)" << endl;
+         << setw(10) << "Fine ($)"
+         << setw(15) << "Color"
+         << setw(10) << "Year"
+         << setw(5) << "Month" << endl;
          
    
-    cout << string(80, '-') << endl;
+    cout << string(110, '-') << endl;
 
 
     int count = 0;
@@ -31,7 +35,10 @@ void display_tickets(const vector<ticket>& tickets, int limit = 15) {
              << setw(8)  << t.state
              << setw(15) << t.vehicle_make
              << setw(35) << t.violation.substr(0, 33) // Truncate super long violations
-             << setw(10) << t.fine << endl;
+             << setw(10) << t.fine
+             << setw(15) << t.vehicle_color
+             << setw(10) << t.year
+             << setw(5) << t.month << endl;
              
         count++;
     }
@@ -43,16 +50,11 @@ void display_tickets(const vector<ticket>& tickets, int limit = 15) {
 // TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
 int main() {
-    // TIP Press <shortcut actionId="RenameElement"/> when your caret is at the <b>lang</b> variable name to see how CLion can help you rename it.
+    vector<ticket> tickets = load_csv("../parking_citations_expanded.csv");
 
-    const auto lang = "C++";
-    std::cout << "Hello and welcome to " << lang << "!\n";
+    vector<ticket> few(tickets.begin(), tickets.begin() + 20000);
 
-    for (int i = 1; i <= 5; i++) {
-        // TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        std::cout << "i = " << i << std::endl;
-    }
+    vector<ticket> sorted = do_quick_sort(few, TicketData::Month);
 
-    return 0;
-    // TIP See CLion help at <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>. Also, you can try interactive lessons for CLion by selecting 'Help | Learn IDE Features' from the main menu.
+    display_tickets(sorted);
 }
