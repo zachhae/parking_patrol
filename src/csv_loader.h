@@ -3,7 +3,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include <algorithm> // Needed to remove quotes
+#include <algorithm>
 #include "ticket.h"
 
 using namespace std;
