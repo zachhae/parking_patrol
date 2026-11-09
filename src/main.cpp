@@ -136,11 +136,10 @@ int main() {
 
     // vector<ticket> few(tickets.begin(), tickets.begin() + 20000);
     //
-    // vector<ticket> sorted = do_quick_sort(few, TicketData::Month);
+    vector<ticket> sorted = do_quick_sort(tickets, TicketData::Fine);
     //
-    // display_tickets(sorted);
+    display_tickets(sorted);
 
-    display_top_ten(tickets, TicketData::Plate_Number);
-    display_tickets(tickets);
+    // display_top_ten(tickets, TicketData::Plate_Number);
 }
 
