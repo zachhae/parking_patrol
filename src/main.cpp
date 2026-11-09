@@ -127,28 +127,28 @@ void display_top_ten(const vector<ticket>& tickets, TicketData data) {
 
 // menu options
 
-void sortByField(const vector<ticket>& tickets) {
-    TicketData data = chooseField("Sort by:");
-    int algorithm = chooseAlgorithm();
+// void sortByField(const vector<ticket>& tickets) {
+//     TicketData data = chooseField("Sort by:");
+//     int algorithm = chooseAlgorithm();
 
-    cout << endl << "Sorting..." << endl;
-    vector<SortResult> results = runSorts(tickets, data, algorithm);
+//     cout << endl << "Sorting..." << endl;
+//     vector<SortResult> results = runSorts(tickets, data, algorithm);
 
-    // show the first 10 tickets from a sort that finished
-    for (const auto& r : results) {
-        if (r.finished) {
-            cout << endl << "First 10 tickets sorted by " << fieldName(data)
-                 << " (" << r.name << "):" << endl;
-            display_tickets(r.tickets);
-            break;
-        }
-    }
-    printResults(results, data);
-}
+//     // show the first 10 tickets from a sort that finished
+//     for (const auto& r : results) {
+//         if (r.finished) {
+//             cout << endl << "First 10 tickets sorted by " << fieldName(data)
+//                  << " (" << r.name << "):" << endl;
+//             display_tickets(r.tickets);
+//             break;
+//         }
+//     }
+//     printResults(results, data);
+// }
 
 
 int main() {
-    vector<ticket> tickets = load_csv("../parking_citations_expanded.csv");
+    vector<ticket> tickets = load_csv("parking_citations_expanded.csv");
 
     if (tickets.empty()) {
             cerr << "Could not load the ticket file. Please try again with a different path." << endl;
@@ -161,7 +161,7 @@ int main() {
         int choice = getNumber(1, 6);
 
         if (choice == 1) {
-            sortByField(tickets);
+    
         } 
         else if (choice == 2) {
             cout << "Two-level sort not implemented yet." << endl;
