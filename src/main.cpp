@@ -117,8 +117,7 @@ void display_tickets(const vector<ticket>& tickets, int limit = 15) {
          << setw(35) << "Violation" 
          << setw(10) << "Fine ($)"
          << setw(15) << "Color"
-         << setw(10) << "Year"
-         << setw(5) << "Month" << endl;
+         << ""Date"<< endl;
          
     cout << string(110, '-') << endl;
 
