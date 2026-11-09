@@ -44,6 +44,34 @@ int getNumber(int low, int high) {
     }
 }
 
+string fieldName(TicketData data) {
+    switch (data) {
+        case TicketData::Plate_Number: return "Plate";
+        case TicketData::Location: return "Street";
+        case TicketData::Violation: return "Violation";
+        case TicketData::Fine: return "Fine";
+        case TicketData::Date: return "Date";
+        default: return "Other";
+    }
+}
+
+TicketData chooseField(string title) {
+    cout << endl << title << endl;
+    cout << " 1. Plate   2. Street   3. Violation   4. Fine   5. Date" << endl;
+    int choice = getNumber(1, 5);
+    if (choice == 1) return TicketData::Plate_Number;
+    if (choice == 2) return TicketData::Location;
+    if (choice == 3) return TicketData::Violation;
+    if (choice == 4) return TicketData::Fine;
+    return TicketData::Date;
+}
+
+int chooseAlgorithm() {
+    cout << endl << "Algorithm:" << endl;
+    cout << " 1. Merge Sort   2. Quick Sort (first pivot)   3. Both (compare)" << endl;
+    return getNumber(1, 3);
+}
+
 void display_tickets(const vector<ticket>& tickets, int limit = 15) {
     cout << "\nShowing top " << limit << " results:\n";
     cout << left 
