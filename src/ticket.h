@@ -11,7 +11,7 @@ using namespace std;
 
 enum class TicketData {
     Plate_Number, State, Vehicle_Make, Vehicle_Style, Vehicle_Color, Location, Violation,
-    Fine, Year, Month, Day, Hour, Minute
+    Fine, Year, Month, Day, Hour, Minute, Date
 };
 
 struct ticket {
@@ -45,6 +45,8 @@ struct ticket {
             case TicketData::Day: return day;
             case TicketData::Hour: return hour;
             case TicketData::Minute: return minute;
+            case TicketData::Date:
+                return year * 100000000.0 + month * 1000000.0 + day * 10000.0 + hour * 100.0 + minute;
         }
     }
 };

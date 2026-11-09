@@ -9,6 +9,7 @@
 
 using namespace std;
 
+//display menu
 void printMenu(int ticketCount) {
     cout << endl;
     cout << "==============================================" << endl;
@@ -23,6 +24,7 @@ void printMenu(int ticketCount) {
     cout << "----------------------------------------------" << endl;
 }
 
+//input
 int getNumber(int low, int high) {
     int number;
     while (true) {

@@ -100,5 +100,3 @@ vector<ticket> load_csv(const string& filename) {
         file.close();
         return tickets;
     }
-
-
