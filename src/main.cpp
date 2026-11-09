@@ -254,6 +254,29 @@ void showTopTen(const vector<ticket>& tickets, TicketData data) {
     printResults(results, data);
 }
 
+void runPerformanceTests(const vector<ticket>& tickets) {
+    TicketData data = chooseField("Test sorting by:");
+    int sizes[] = {1000, 5000, 10000, 50000, (int)tickets.size()};
+
+    cout << endl << "Sorting by " << fieldName(data) << " (time in ms)" << endl;
+    cout << left << setw(10) << "Size"
+         << right << setw(14) << "Merge (ms)" << setw(16) << "Merge comps"
+         << setw(14) << "Quick (ms)" << setw(16) << "Quick comps" << endl;
+    cout << string(70, '-') << endl;
+
+    for (int size : sizes) {
+        if (size > (int)tickets.size()) continue;
+        vector<ticket> part(tickets.begin(), tickets.begin() + size);
+
+        SortResult m = runMergeSort(part, data);
+        cout << left << setw(10) << size << right << fixed << setprecision(1)
+             << setw(14) << m.timeMs << setw(16) << m.comparisons;
+
+        SortResult q = runQuickSort(part, data);
+        cout << setw(14) << q.timeMs << setw(16) << q.comparisons << endl;
+    }
+}
+
 int main() {
     vector<ticket> tickets = load_csv("../parking_citations_expanded.csv");
 
