@@ -72,6 +72,21 @@ int chooseAlgorithm() {
     return getNumber(1, 3);
 }
 
+SortResult runMergeSort(const vector<ticket>& tickets, TicketData data) {
+    SortResult result;
+    result.name = "Merge Sort";
+    result.tickets = tickets; 
+    int comparisons, moves;
+
+    auto start = chrono::steady_clock::now();
+    mergeSort(result.tickets, data, comparisons, moves);
+    result.timeMs = msSince(start);
+
+    result.comparisons = comparisons;
+    result.moves = moves;
+    return result;
+}
+
 void display_tickets(const vector<ticket>& tickets, int limit = 15) {
     cout << "\nShowing top " << limit << " results:\n";
     cout << left 
