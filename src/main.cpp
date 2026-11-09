@@ -9,10 +9,41 @@
 
 using namespace std;
 
+void printMenu(int ticketCount) {
+    cout << endl;
+    cout << "==============================================" << endl;
+    cout << "      TICKET TRACKER  (" << ticketCount << " tickets)" << endl;
+    cout << "==============================================" << endl;
+    cout << " 1. Sort tickets by a field" << endl;
+    cout << " 2. Two-level sort (e.g. street, then date)" << endl;
+    cout << " 3. Top 10 repeat offenders (plates)" << endl;
+    cout << " 4. Top 10 streets with the most tickets" << endl;
+    cout << " 5. Run performance tests" << endl;
+    cout << " 6. Exit" << endl;
+    cout << "----------------------------------------------" << endl;
+}
+
+int getNumber(int low, int high) {
+    int number;
+    while (true) {
+        cout << "Choose: ";
+        if (cin >> number) {
+            if (number >= low && number <= high) {
+                return number;
+            }
+        } else {
+            if (cin.eof()) {
+                return high; 
+            }
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
+        cout << "Please type a number from " << low << " to " << high << "." << endl;
+    }
+}
+
 void display_tickets(const vector<ticket>& tickets, int limit = 15) {
     cout << "\nShowing top " << limit << " results:\n";
-    
-    
     cout << left 
          << setw(12) << "Plate" 
          << setw(8)  << "State" 
@@ -23,9 +54,7 @@ void display_tickets(const vector<ticket>& tickets, int limit = 15) {
          << setw(10) << "Year"
          << setw(5) << "Month" << endl;
          
-   
     cout << string(110, '-') << endl;
-
 
     int count = 0;
     for (const auto& t : tickets) {
