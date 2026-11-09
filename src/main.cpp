@@ -19,21 +19,6 @@ struct SortResult {
     bool finished = true;     // false if quick sort was stopped
 };
 
-
-//display menu
-void printMenu(int ticketCount) {
-    cout << endl;
-    cout << "==============================================" << endl;
-    cout << "      TICKET TRACKER  (" << ticketCount << " tickets)" << endl;
-    cout << "==============================================" << endl;
-    cout << " 1. Sort tickets by a field" << endl;
-    cout << " 2. Two-level sort (e.g. street, then date)" << endl;
-    cout << " 3. Top 10 offenders" << endl;
-    cout << " 5. Run performance tests" << endl;
-    cout << " 6. Exit" << endl;
-    cout << "----------------------------------------------" << endl;
-}
-
 //input
 int getNumber(int low, int high) {
     int number;
@@ -82,6 +67,10 @@ int chooseAlgorithm() {
     return getNumber(1, 3);
 }
 
+double msSince(chrono::steady_clock::time_point start) {
+    return chrono::duration<double, milli>(chrono::steady_clock::now() - start).count();
+}
+
 SortResult runMergeSort(const vector<ticket>& tickets, TicketData data) {
     SortResult result;
     result.name = "Merge Sort";
@@ -95,6 +84,7 @@ SortResult runMergeSort(const vector<ticket>& tickets, TicketData data) {
     result.comparisons = comparisons;
     result.moves = moves;
     return result;
+}
 
 SortResult runQuickSort(const vector<ticket>& tickets, TicketData data) {
     SortResult r;
@@ -118,6 +108,45 @@ vector<SortResult> runSorts(const vector<ticket>& tickets, TicketData data, int 
     return results;
 }
 
+bool isSorted(const vector<ticket>& tickets, TicketData data) {
+    for (size_t i = 1; i < tickets.size(); i++) {
+        if (tickets[i].get_data_field(data) < tickets[i - 1].get_data_field(data)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool resultsMatch(const vector<SortResult>& results, TicketData data) {
+    const SortResult* first = nullptr;
+    for (const auto& r : results) {
+        if (!isSorted(r.tickets, data)) return false;
+        if (first == nullptr) {
+            first = &r;
+            continue;
+        }
+        for (int i = 0; i < (int)r.tickets.size(); i++) {
+            if (r.tickets[i].get_data_field(data) != first->tickets[i].get_data_field(data)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+void printMenu(int ticketCount) {
+    cout << endl;
+    cout << "==============================================" << endl;
+    cout << "      TICKET TRACKER  (" << ticketCount << " tickets)" << endl;
+    cout << "==============================================" << endl;
+    cout << " 1. Sort tickets by a field" << endl;
+    cout << " 2. Top 10 repeat offenders (plates)" << endl;
+    cout << " 3. Top 10 streets with the most tickets" << endl;
+    cout << " 4. Run performance tests" << endl;
+    cout << " 5. Exit" << endl;
+    cout << "----------------------------------------------" << endl;
+}
+
 void display_tickets(const vector<ticket>& tickets, int limit = 15) {
     cout << "\nShowing top " << limit << " results:\n";
     cout << left 
@@ -127,13 +156,14 @@ void display_tickets(const vector<ticket>& tickets, int limit = 15) {
          << setw(35) << "Violation" 
          << setw(10) << "Fine ($)"
          << setw(15) << "Color"
-         << ""Date"<< endl;
+         << "Date"<< endl;
          
     cout << string(110, '-') << endl;
 
     int count = 0;
     for (const auto& t : tickets) {
-        if (count >= limit) break; 
+        if (count >= limit) 
+            break; 
         
         cout << left 
              << setw(12) << t.plate_number
@@ -150,27 +180,55 @@ void display_tickets(const vector<ticket>& tickets, int limit = 15) {
     cout << endl;
 }
     
-void display_top_ten(const vector<ticket>& tickets, TicketData data) {
-    unordered_map<variant<string, int, double>, int> tracker;
-
-    for (const auto& t : tickets) {
-        tracker[t.get_data_field(data)]++;
+void printResults(const vector<SortResult>& results, TicketData data) {
+    cout << endl << left << setw(28) << "Algorithm"
+         << right << setw(12) << "Time (ms)"
+         << setw(16) << "Comparisons"
+         << setw(14) << "Moves" << endl;
+    cout << string(70, '-') << endl;
+    for (const auto& r : results) {
+        cout << left << setw(28) << r.name << right
+             << setw(12) << fixed << setprecision(1) << r.timeMs
+             << setw(16) << r.comparisons << setw(14) << r.moves << endl;
     }
-
-    vector<pair<variant<string, int, double>, int>> results(tracker.begin(), tracker.end());
-    sort(results.begin(), results.end(), [](auto a, auto b) {
-        return a.second > b.second;
-    });
-
-    cout << "\nShowing top 10 offender results:\n";
-    cout << string(40, '-') << endl;
-    for (int i = 0; i < 10 && i < results.size(); i++) {
-        visit([](auto &arg) { cout << left << setw(35) << arg; }, results[i].first);
-        cout << right << setw(5) << results[i].second << endl;
+    if (results.size() > 1) {
+        cout << "All results match: " << (resultsMatch(results, data) ? "YES" : "NO") << endl;
     }
 }
 
-// menu options
+void showTopTen(const vector<ticket>& tickets, TicketData data) {
+    cout << endl << "Sorting by " << fieldName(data) << " with both algorithms..." << endl;
+    vector<SortResult> results = runSorts(tickets, data, BOTH);
+    const vector<ticket>& sorted = results[0].tickets;  
+
+    vector<pair<string, int>> counts;
+    int i = 0;
+    while (i < (int)sorted.size()) {
+        string value = get<string>(sorted[i].get_data_field(data));
+        int j = i;
+        while (j < (int)sorted.size() && get<string>(sorted[j].get_data_field(data)) == value) {
+            j++;
+        }
+        if (!value.empty()) {
+            counts.push_back({value, j - i});
+        }
+        i = j;
+    }
+
+    sort(counts.begin(), counts.end(), [](const pair<string, int>& a, const pair<string, int>& b) {
+        if (a.second != b.second) return a.second > b.second;
+        return a.first < b.first;
+    });
+
+    string title = (data == TicketData::Plate_Number) ? "Top 10 repeat offenders" : "Top 10 streets";
+    cout << endl << title << endl;
+    cout << left << setw(6) << "Rank" << setw(32) << fieldName(data) << "Tickets" << endl;
+    cout << string(46, '-') << endl;
+    for (int k = 0; k < 10 && k < (int)counts.size(); k++) {
+        cout << left << setw(6) << k + 1 << setw(32) << counts[k].first << counts[k].second << endl;
+    }
+    printResults(results, data);
+}
 
 void sortByField(const vector<ticket>& tickets) {
     TicketData data = chooseField("Sort by:");
@@ -179,7 +237,6 @@ void sortByField(const vector<ticket>& tickets) {
     cout << endl << "Sorting..." << endl;
     vector<SortResult> results = runSorts(tickets, data, algorithm);
 
-    // show the first 10 tickets from a sort that finished
     for (const auto& r : results) {
         if (r.finished) {
             cout << endl << "First 10 tickets sorted by " << fieldName(data)
@@ -233,4 +290,3 @@ int main() {
 
   
 }
-
