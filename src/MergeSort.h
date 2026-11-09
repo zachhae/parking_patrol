@@ -2,7 +2,7 @@
 #define MERGESORT_H
 
 #include <vector>
-#include "../shared/Ticket.h"
+#include "ticket.h"
 
 // Sorts the tickets using merge sort.
 // comparisons and moves are counted so we can compare with quick sort.
