@@ -9,6 +9,17 @@
 
 using namespace std;
 
+
+struct SortResult {
+    string name;
+    vector<ticket> tickets;   // the sorted list
+    double timeMs = 0;
+    long long comparisons = 0;
+    long long moves = 0;
+    bool finished = true;     // false if quick sort was stopped
+};
+
+
 //display menu
 void printMenu(int ticketCount) {
     cout << endl;
@@ -72,6 +83,17 @@ int chooseAlgorithm() {
     return getNumber(1, 3);
 }
 
+vector<SortResult> runSorts(const vector<ticket>& tickets, TicketData data, int algorithm) {
+    vector<SortResult> results;
+    if (algorithm == MERGE || algorithm == BOTH) {
+        results.push_back(runMergeSort(tickets, data));
+    }
+    if (algorithm == QUICK || algorithm == BOTH) {
+        results.push_back(runQuickSort(tickets, data));
+    }
+    return results;
+}
+
 void display_tickets(const vector<ticket>& tickets, int limit = 15) {
     cout << "\nShowing top " << limit << " results:\n";
     cout << left 
@@ -127,24 +149,24 @@ void display_top_ten(const vector<ticket>& tickets, TicketData data) {
 
 // menu options
 
-// void sortByField(const vector<ticket>& tickets) {
-//     TicketData data = chooseField("Sort by:");
-//     int algorithm = chooseAlgorithm();
+void sortByField(const vector<ticket>& tickets) {
+    TicketData data = chooseField("Sort by:");
+    int algorithm = chooseAlgorithm();
 
-//     cout << endl << "Sorting..." << endl;
-//     vector<SortResult> results = runSorts(tickets, data, algorithm);
+    cout << endl << "Sorting..." << endl;
+    vector<SortResult> results = runSorts(tickets, data, algorithm);
 
-//     // show the first 10 tickets from a sort that finished
-//     for (const auto& r : results) {
-//         if (r.finished) {
-//             cout << endl << "First 10 tickets sorted by " << fieldName(data)
-//                  << " (" << r.name << "):" << endl;
-//             display_tickets(r.tickets);
-//             break;
-//         }
-//     }
-//     printResults(results, data);
-// }
+    // show the first 10 tickets from a sort that finished
+    for (const auto& r : results) {
+        if (r.finished) {
+            cout << endl << "First 10 tickets sorted by " << fieldName(data)
+                 << " (" << r.name << "):" << endl;
+            display_tickets(r.tickets);
+            break;
+        }
+    }
+    printResults(results, data);
+}
 
 
 int main() {
@@ -156,11 +178,16 @@ int main() {
     }
     cout << "Loaded " << tickets.size() << " tickets." << endl;
 
+    int merge = 1;
+    int quick = 2;
+    int both = 3;
+
     while (true) {
         printMenu(tickets.size());
         int choice = getNumber(1, 6);
 
         if (choice == 1) {
+            sortByField(tickets);
     
         } 
         else if (choice == 2) {
