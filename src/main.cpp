@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <vector>
 #include <unordered_map>
-#include <algorithim> 
+#include <algorithm>
 #include <string>
 #include <chrono>
 #include "ticket.h"
@@ -278,17 +278,16 @@ void runPerformanceTests(const vector<ticket>& tickets) {
 }
 
 int main() {
-    vector<ticket> tickets = load_csv("../parking_citations_expanded.csv");
+    vector<ticket> tickets = load_csv("parking_citations_expanded.csv");
+    if (tickets.empty()) {
+        tickets = load_csv("../parking_citations_expanded.csv");
+    }
 
     if (tickets.empty()) {
-            cerr << "Could not load the ticket file. Please try again with a different path." << endl;
+        cerr << "Could not load the ticket file. Please try again with a different path." << endl;
         return 1;
     }
     cout << "Loaded " << tickets.size() << " tickets." << endl;
-
-    int merge = 1;
-    int quick = 2;
-    int both = 3;
 
     while (true) {
         printMenu(tickets.size());
@@ -296,25 +295,24 @@ int main() {
 
         if (choice == 1) {
             sortByField(tickets);
-    
-        } 
+        }
         else if (choice == 2) {
             cout << "Two-level sort not implemented yet." << endl;
-        } 
+        }
         else if (choice == 3) {
-            display_top_ten(tickets, TicketData::Plate_Number);
-        } 
+            showTopTen(tickets, TicketData::Plate_Number);
+        }
         else if (choice == 4) {
-            display_top_ten(tickets, TicketData::Location);
-        } 
+            showTopTen(tickets, TicketData::Location);
+        }
         else if (choice == 5) {
-        } 
+            runPerformanceTests(tickets);
+        }
         else if (choice == 6) {
             cout << "Exiting." << endl;
             break;
         }
     }
 
-
-  
+    return 0;
 }
