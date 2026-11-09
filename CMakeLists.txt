@@ -3,7 +3,7 @@ project(parking_patrol)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(parking_patrol main.cpp
-        quick_sort.cpp
-        quick_sort.h
-        ticket.h)
+add_executable(parking_patrol src/main.cpp
+        src/quick_sort.cpp
+        src/quick_sort.h
+        src/ticket.h)
