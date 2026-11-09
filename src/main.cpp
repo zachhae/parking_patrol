@@ -297,18 +297,15 @@ int main() {
             sortByField(tickets);
         }
         else if (choice == 2) {
-            cout << "Two-level sort not implemented yet." << endl;
-        }
-        else if (choice == 3) {
             showTopTen(tickets, TicketData::Plate_Number);
         }
-        else if (choice == 4) {
+        else if (choice == 3) {
             showTopTen(tickets, TicketData::Location);
         }
-        else if (choice == 5) {
+        else if (choice == 4) {
             runPerformanceTests(tickets);
         }
-        else if (choice == 6) {
+        else if (choice == 5) {
             cout << "Exiting." << endl;
             break;
         }
