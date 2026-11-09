@@ -125,22 +125,62 @@ void display_top_ten(const vector<ticket>& tickets, TicketData data) {
     }
 }
 
+// menu options
+
+void sortByField(const vector<ticket>& tickets) {
+    TicketData data = chooseField("Sort by:");
+    int algorithm = chooseAlgorithm();
+
+    cout << endl << "Sorting..." << endl;
+    vector<SortResult> results = runSorts(tickets, data, algorithm);
+
+    // show the first 10 tickets from a sort that finished
+    for (const auto& r : results) {
+        if (r.finished) {
+            cout << endl << "First 10 tickets sorted by " << fieldName(data)
+                 << " (" << r.name << "):" << endl;
+            display_tickets(r.tickets);
+            break;
+        }
+    }
+    printResults(results, data);
+}
+
 
 int main() {
     vector<ticket> tickets = load_csv("../parking_citations_expanded.csv");
 
     if (tickets.empty()) {
-            cerr << "No tickets loaded. Exiting." << endl;
+            cerr << "Could not load the ticket file. Please try again with a different path." << endl;
         return 1;
     }
+    cout << "Loaded " << tickets.size() << " tickets." << endl;
 
-    // vector<ticket> few(tickets.begin(), tickets.begin() + 20000);
-    //
-    // vector<ticket> sorted = do_quick_sort(few, TicketData::Month);
-    //
-    // display_tickets(sorted);
+    while (true) {
+        printMenu(tickets.size());
+        int choice = getNumber(1, 6);
 
-    display_top_ten(tickets, TicketData::Plate_Number);
-    display_tickets(tickets);
+        if (choice == 1) {
+            sortByField(tickets);
+        } 
+        else if (choice == 2) {
+            cout << "Two-level sort not implemented yet." << endl;
+        } 
+        else if (choice == 3) {
+            display_top_ten(tickets, TicketData::Plate_Number);
+        } 
+        else if (choice == 4) {
+            display_top_ten(tickets, TicketData::Location);
+        } 
+        else if (choice == 5) {
+        } 
+        else if (choice == 6) {
+            cout << "Exiting." << endl;
+            break;
+        }
+    }
+
+
+  
 }
 
