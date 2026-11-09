@@ -96,6 +96,7 @@ SortResult runMergeSort(const vector<ticket>& tickets, TicketData data) {
     result.comparisons = comparisons;
     result.moves = moves;
     return result;
+    
 vector<SortResult> runSorts(const vector<ticket>& tickets, TicketData data, int algorithm) {
     vector<SortResult> results;
     if (algorithm == MERGE || algorithm == BOTH) {
