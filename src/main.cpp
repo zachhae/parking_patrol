@@ -82,5 +82,6 @@ int main() {
     // display_tickets(sorted);
 
     display_top_ten(tickets, TicketData::Plate_Number);
+    display_tickets(tickets);
 }
 
