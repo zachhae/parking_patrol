@@ -3,10 +3,11 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include <chrono>
 #include "ticket.h"
 #include "csv_loader.h"
-#include "chrono"
 #include "quick_sort.h"
+#include "MergeSort.h"
 
 using namespace std;
 
@@ -87,6 +88,10 @@ int chooseAlgorithm() {
     cout << endl << "Algorithm:" << endl;
     cout << " 1. Merge Sort   2. Quick Sort (first pivot)   3. Both (compare)" << endl;
     return getNumber(1, 3);
+}
+
+double msSince(chrono::steady_clock::time_point start) {
+    return chrono::duration<double, milli>(chrono::steady_clock::now() - start).count();
 }
 
 SortResult runMergeSort(const vector<ticket>& tickets, TicketData data) {
@@ -171,9 +176,7 @@ void printResults(const vector<SortResult>& results, TicketData data) {
                  << " comparisons (its O(n^2) worst case)." << endl;
         }
     }
-    if (results.size() > 1) {
-        cout << "All results match: " << (resultsMatch(results, data) ? "YES" : "NO") << endl;
-    }
+
 }
     
 void display_top_ten(const vector<ticket>& tickets, TicketData data) {
