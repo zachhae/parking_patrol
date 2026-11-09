@@ -28,8 +28,7 @@ void printMenu(int ticketCount) {
     cout << "==============================================" << endl;
     cout << " 1. Sort tickets by a field" << endl;
     cout << " 2. Two-level sort (e.g. street, then date)" << endl;
-    cout << " 3. Top 10 repeat offenders (plates)" << endl;
-    cout << " 4. Top 10 streets with the most tickets" << endl;
+    cout << " 3. Top 10 offenders" << endl;
     cout << " 5. Run performance tests" << endl;
     cout << " 6. Exit" << endl;
     cout << "----------------------------------------------" << endl;
@@ -96,6 +95,18 @@ SortResult runMergeSort(const vector<ticket>& tickets, TicketData data) {
     result.comparisons = comparisons;
     result.moves = moves;
     return result;
+
+SortResult runQuickSort(const vector<ticket>& tickets, TicketData data) {
+    SortResult r;
+    r.name = "Quick Sort (first pivot)";
+
+    auto start = chrono::steady_clock::now();
+    r.tickets = do_quick_sort(tickets, data, r.comparisons, r.moves);
+    r.timeMs = msSince(start);
+
+    return r;
+}
+
 vector<SortResult> runSorts(const vector<ticket>& tickets, TicketData data, int algorithm) {
     vector<SortResult> results;
     if (algorithm == MERGE || algorithm == BOTH) {
@@ -183,7 +194,7 @@ void sortByField(const vector<ticket>& tickets) {
 
 
 int main() {
-    vector<ticket> tickets = load_csv("parking_citations_expanded.csv");
+    vector<ticket> tickets = load_csv("../parking_citations_expanded.csv");
 
     if (tickets.empty()) {
             cerr << "Could not load the ticket file. Please try again with a different path." << endl;
