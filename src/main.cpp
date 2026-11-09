@@ -3,11 +3,18 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include <chrono>
 #include "ticket.h"
 #include "csv_loader.h"
 #include "quick_sort.h"
+#include "MergeSort.h"
 
 using namespace std;
+
+
+const int MERGE = 1;
+const int QUICK = 2;
+const int BOTH = 3;
 
 
 struct SortResult {
@@ -18,6 +25,22 @@ struct SortResult {
     long long moves = 0;
     bool finished = true;     // false if quick sort was stopped
 };
+
+
+//display menu
+void printMenu(int ticketCount) {
+    cout << endl;
+    cout << "==============================================" << endl;
+    cout << "      TICKET TRACKER  (" << ticketCount << " tickets)" << endl;
+    cout << "==============================================" << endl;
+    cout << " 1. Sort tickets by a field" << endl;
+    cout << " 2. Two-level sort (e.g. street, then date)" << endl;
+    cout << " 3. Top 10 repeat offenders (plates)" << endl;
+    cout << " 4. Top 10 streets with the most tickets" << endl;
+    cout << " 5. Run performance tests" << endl;
+    cout << " 6. Exit" << endl;
+    cout << "----------------------------------------------" << endl;
+}
 
 //input
 int getNumber(int low, int high) {
@@ -84,7 +107,6 @@ SortResult runMergeSort(const vector<ticket>& tickets, TicketData data) {
     result.comparisons = comparisons;
     result.moves = moves;
     return result;
-}
 
 SortResult runQuickSort(const vector<ticket>& tickets, TicketData data) {
     SortResult r;
@@ -156,7 +178,7 @@ void display_tickets(const vector<ticket>& tickets, int limit = 15) {
          << setw(35) << "Violation" 
          << setw(10) << "Fine ($)"
          << setw(15) << "Color"
-         << "Date"<< endl;
+         << ""Date"<< endl;
          
     cout << string(110, '-') << endl;
 
@@ -178,6 +200,32 @@ void display_tickets(const vector<ticket>& tickets, int limit = 15) {
         count++;
     }
     cout << endl;
+}
+
+void printResults(const vector<SortResult>& results, TicketData data) {
+    
+    cout << endl << left << setw(28) << "Algorithm"
+         << right << setw(12) << "Time (ms)"
+         << setw(16) << "Comparisons"
+         << setw(14) << "Moves" << endl;
+
+    cout << string(70, '-') << endl;
+    for (const auto& r : results) {
+        cout << left << setw(28) << r.name << right;
+        if (r.finished) {
+            cout << setw(12) << fixed << setprecision(1) << r.timeMs;
+        } else {
+            cout << setw(12) << "STOPPED";
+        }
+        cout << setw(16) << r.comparisons << setw(14) << r.moves << endl;
+    }
+    for (const auto& r : results) {
+        if (!r.finished) {
+            cout << "STOPPED: quick sort passed " << QUICK_SORT_LIMIT
+                 << " comparisons (its O(n^2) worst case)." << endl;
+        }
+    }
+
 }
     
 void printResults(const vector<SortResult>& results, TicketData data) {
@@ -250,7 +298,7 @@ void sortByField(const vector<ticket>& tickets) {
 
 
 int main() {
-    vector<ticket> tickets = load_csv("../parking_citations_expanded.csv");
+    vector<ticket> tickets = load_csv("parking_citations_expanded.csv");
 
     if (tickets.empty()) {
             cerr << "Could not load the ticket file. Please try again with a different path." << endl;
@@ -258,9 +306,7 @@ int main() {
     }
     cout << "Loaded " << tickets.size() << " tickets." << endl;
 
-    int merge = 1;
-    int quick = 2;
-    int both = 3;
+
 
     while (true) {
         printMenu(tickets.size());
